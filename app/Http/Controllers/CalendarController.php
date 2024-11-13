@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Spatie\IcalendarGenerator\Components\Calendar;
 use Spatie\IcalendarGenerator\Components\Event;
 
@@ -23,14 +24,14 @@ class CalendarController extends Controller
         foreach (Task::query()->whereNotNull('deadline')->get() as $task) {
             $calendar->event(
                 Event::create()
+                    ->uniqueIdentifier($task->uuid)
                     ->name($task->title)
-                    ->description($task->description)
-                    ->startsAt($task->created_at)
+                    ->description($task->description ?? '')
+                    ->startsAt($task->deadline->subHour())
                     ->endsAt($task->deadline)
-                    ->transparent()
             );
         }
 
-        return $calendar->refreshInterval(5)->get();
+        return $calendar->refreshInterval(1)->get();
     }
 }
