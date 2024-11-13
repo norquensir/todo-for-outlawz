@@ -15,6 +15,10 @@ class CreateTask extends Form
 
     public function store()
     {
+        if (empty($this->title)) {
+            return;
+        }
+
         $task = new Task();
         $task->title = $this->title;
         $task->description = $this->description ?? null;

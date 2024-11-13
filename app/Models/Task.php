@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class Task extends Model
@@ -17,8 +19,13 @@ class Task extends Model
 
     protected static function booted(): void
     {
+        static::addGlobalScope('check_owner', function (Builder $builder) {
+            $builder->where('user_id', Auth::id());
+        });
+
         self::creating(function ($model) {
             $model->uuid = Str::uuid();
+            $model->user_id = Auth::id();
         });
     }
 
