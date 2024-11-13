@@ -7,7 +7,8 @@ use Illuminate\Support\Str;
 
 trait HasUuid
 {
-    public static function bootHasUuid() {
+    public static function bootHasUuid(): void
+    {
         self::creating(function ($model) {
             $model->uuid = Str::uuid();
         });
@@ -16,5 +17,10 @@ trait HasUuid
     public static function findByUuid(string $taskUuid): Model|null
     {
         return self::query()->where('uuid', $taskUuid)->first();
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
     }
 }

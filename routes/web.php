@@ -12,7 +12,7 @@ Route::middleware('web')->group(function () {
         return redirect()->route('dashboard');
     });
 
-    Route::get('/calendar/{userUuid}', CalendarController::class)->name('calendar');
+    Route::get('/calendar/{user}', CalendarController::class)->name('calendar');
 });
 
 Route::middleware('auth')->group(function () {

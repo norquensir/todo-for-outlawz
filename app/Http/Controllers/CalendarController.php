@@ -10,14 +10,8 @@ use Spatie\IcalendarGenerator\Components\Event;
 
 class CalendarController extends Controller
 {
-    public function __invoke(Request $request, string $userUuid)
+    public function __invoke(Request $request, User $user)
     {
-        $user = User::findByUuid($userUuid);
-
-        if (!$user) {
-            abort(404);
-        }
-
         $events = [];
         foreach (Task::query()->whereNotNull('deadline')->get() as $task) {
             $events[] = Event::create()
