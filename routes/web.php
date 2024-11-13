@@ -1,17 +1,23 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\PageController;
-use App\Http\Controllers\TaskController;
 use App\Livewire\Dashboard;
+use App\Livewire\SetCalendar;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('web')->group(function () {
-    //
+    Route::fallback(function () {
+        return redirect()->route('dashboard');
+    });
+
+    Route::get('/calendar/{userUuid}', CalendarController::class)->name('calendar');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', Dashboard::class)->name('dashboard.index');
+    Route::get('/', Dashboard::class)->name('dashboard');
+    Route::get('/set-calendar', SetCalendar::class)->name('dashboard.set_calendar');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 });

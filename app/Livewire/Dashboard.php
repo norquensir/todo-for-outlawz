@@ -13,7 +13,7 @@ class Dashboard extends Component
 
     public function render()
     {
-        return view('livewire.dashboard.index')->with([
+        return view('livewire.dashboard')->with([
             'tasks' => Task::query()->orderBy('is_completed')->oldest()->get(),
         ]);
     }

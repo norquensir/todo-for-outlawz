@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 
 class Task extends Model
 {
+    use HasUuid;
+
     protected function casts(): array
     {
         return [
@@ -24,14 +25,8 @@ class Task extends Model
         });
 
         self::creating(function ($model) {
-            $model->uuid = Str::uuid();
             $model->user_id = Auth::id();
         });
-    }
-
-    public static function findByUuid(string $taskUuid): Task|null
-    {
-        return Task::query()->where('uuid', $taskUuid)->first();
     }
 
     public function isDue(): bool
