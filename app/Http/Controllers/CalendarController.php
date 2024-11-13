@@ -29,7 +29,7 @@ class CalendarController extends Controller
         }
 
         return response(
-            Calendar::create()->name($user->calendar_name)->event($events)->refreshInterval(1)->get()
+            Calendar::create()->name($user->calendar_name)->event($events)->refreshInterval(1)->withoutTimezone()->get()
         )->header('Content-Type', 'text/calendar; charset=utf-8');
     }
 }

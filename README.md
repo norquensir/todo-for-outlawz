@@ -4,6 +4,7 @@
 2. Kopieer het .env.example bestand naar .env `cp .env.example .env`
 3. Vul de juiste database gegevens in (in het `.env` bestand)
 4. Draai de commando's `npm install && npm run build`
+5. Migreer de database `php artisan migrate`
 
 ### Gebruik van de ToDo applicatie
 Het is een simpele ToDo applicatie waarbij je een account kunt aanmaken om vervolgens taken aan te maken. Per taak kun
