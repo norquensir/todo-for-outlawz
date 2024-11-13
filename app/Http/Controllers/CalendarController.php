@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Spatie\IcalendarGenerator\Components\Calendar;
 use Spatie\IcalendarGenerator\Components\Event;
 
@@ -19,19 +18,18 @@ class CalendarController extends Controller
             abort(404);
         }
 
-        $calendar = Calendar::create()->name($user->calendar_name);
-
+        $events = [];
         foreach (Task::query()->whereNotNull('deadline')->get() as $task) {
-            $calendar->event(
-                Event::create()
-                    ->uniqueIdentifier($task->uuid)
-                    ->name($task->title)
-                    ->description($task->description ?? '')
-                    ->startsAt($task->deadline->subHour())
-                    ->endsAt($task->deadline)
-            );
+            $events[] = Event::create()
+                ->uniqueIdentifier($task->uuid)
+                ->name($task->title)
+                ->description($task->description ?? '')
+                ->startsAt($task->deadline->subHour())
+                ->endsAt($task->deadline);
         }
 
-        return $calendar->refreshInterval(1)->get();
+        return response(
+            Calendar::create()->name($user->calendar_name)->event($events)->refreshInterval(1)->get()
+        )->header('Content-Type', 'text/calendar; charset=utf-8');
     }
 }
