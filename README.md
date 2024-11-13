@@ -1,66 +1,28 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Start
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+1. Clone deze repository
+2. Kopieer het .env.example bestand naar .env `cp .env.example .env`
+3. Vul de juiste database gegevens in (in het `.env` bestand)
+4. Draai de commando's `npm install && npm run build`
 
-## About Laravel
+### Gebruik van de ToDo applicatie
+Het is een simpele ToDo applicatie waarbij je een account kunt aanmaken om vervolgens taken aan te maken. Per taak kun
+je een titel en omschrijving instellen, maak ook een deadline. De deadline voor 2 dingen gebruikt, om in de applicatie
+aan te geven of je deadline al is verstreken en bij het gebruiken van de ICS-link wordt dit ingesteld als einddatum.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Ontwikkelingsproces
+Het was voor mij weer even Livewire opfrissen omdat ik een paar maanden geleden voor het eerst ermee begonnen ben. Dit
+was dan voornamelijk alleen met gebruik van de Livewire-components en nog niet zo zeer AlpineJS. Voor deze taak heb ik
+mezelf geprobeerd uit te dagen om ook interactiviteit toe te voegen met een klein stukje AlpineJS code. Het is nog niet
+perfect gelukt, maar ben er aardig trots op geworden.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Waar ik tot nu toe tegenaan gelopen ben is het valideren van de input met de normale Laravel Validation, waarbij je
+simpelweg  `$request->validate([]);` kunt gebruiken. Maar, bij het proberen te valideren sluitte Livewire steeds mijn
+modal. Voor nu heb ik dit opgelost door te checken of de vereiste velden wel gevuld zijn, voordat er een actie gebeurd.
+Om te voorkomen dat er Exceptions gethrowed worden door de applicatie.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Wat niet al te veel moeite was, maar wat ik wel belangrijk vond, is om rekening te houden met mobiel en laptop bij het
+maken van de layout.
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Demo
+Er is ook een demo beschikbaar op https://todo.codeurs.nl

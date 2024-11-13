@@ -17,6 +17,6 @@
 
     <div class="">
         <input type="text" class="border rounded p-2 w-full" value="{{ route('calendar', Auth::user()->uuid) }}" disabled>
-        <span class="italic text-gray-500">Kopieer deze link en plak deze link in een agenda naar keus.</span>
+        <a href="{{ route('calendar', Auth::user()->uuid) }}" class="italic text-gray-500">Download het ICS-bestand</a>
     </div>
 </div>
