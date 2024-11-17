@@ -12,18 +12,27 @@ class CalendarController extends Controller
 {
     public function __invoke(Request $request, User $user)
     {
+        $tasks = Task::query()
+            ->withoutGlobalScope('check_owner')
+            ->where('user_id', $user->id)
+            ->whereNotNull('deadline')
+            ->get();
+
         $events = [];
-        foreach (Task::query()->whereNotNull('deadline')->get() as $task) {
+        foreach ($tasks as $task) {
             $events[] = Event::create()
                 ->uniqueIdentifier($task->uuid)
                 ->name($task->title)
                 ->description($task->description ?? '')
-                ->startsAt($task->deadline->subHour())
-                ->endsAt($task->deadline);
+                ->startsAt($task->deadline)
+                ->fullDay();
         }
 
         return response(
-            Calendar::create()->name($user->calendar_name)->event($events)->refreshInterval(1)->withoutTimezone()->get()
-        )->header('Content-Type', 'text/calendar; charset=utf-8');
+            Calendar::create($user->calendar_name)
+                ->event($events)
+                ->refreshInterval(5)
+                ->get()
+        )->header('Content-Type', 'text/calendar');
     }
 }
