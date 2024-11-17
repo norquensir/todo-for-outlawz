@@ -20,9 +20,8 @@ class CalendarController extends Controller
 
         $events = [];
         foreach ($tasks as $task) {
-            $events[] = Event::create()
+            $events[] = Event::create($task->title)
                 ->uniqueIdentifier($task->uuid)
-                ->name($task->title)
                 ->description($task->description ?? '')
                 ->startsAt($task->deadline)
                 ->fullDay();
@@ -32,6 +31,7 @@ class CalendarController extends Controller
             Calendar::create($user->calendar_name)
                 ->event($events)
                 ->refreshInterval(5)
+                ->productIdentifier('norquensir/todo-for-outlawz')
                 ->get()
         )->header('Content-Type', 'text/calendar');
     }
