@@ -11,6 +11,13 @@ class Task extends Model
 {
     use HasUuid;
 
+    protected $fillable = [
+        'title',
+        'description',
+        'deadline',
+        'priority',
+    ];
+
     protected function casts(): array
     {
         return [

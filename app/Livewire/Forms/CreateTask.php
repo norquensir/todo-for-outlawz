@@ -13,6 +13,8 @@ class CreateTask extends Form
 
     public string|null $deadline;
 
+    public string $priority = 'medium';
+
     public function store()
     {
         if (empty($this->title)) {
@@ -23,6 +25,7 @@ class CreateTask extends Form
         $task->title = $this->title;
         $task->description = $this->description ?? null;
         $task->deadline = $this->deadline ?? null;
+        $task->priority = $this->priority;
         $task->save();
     }
 }
