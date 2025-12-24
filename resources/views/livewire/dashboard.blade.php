@@ -11,12 +11,93 @@
             <h1 class="text-lg font-semibold">Mijn taken</h1>
         </div>
 
+        {{-- Statistics Dashboard --}}
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-5">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <div class="text-2xl font-bold text-blue-900">{{ $stats['total'] }}</div>
+                <div class="text-xs text-blue-700">Totaal</div>
+            </div>
+            <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                <div class="text-2xl font-bold text-green-900">{{ $stats['completed'] }}</div>
+                <div class="text-xs text-green-700">Voltooid</div>
+            </div>
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                <div class="text-2xl font-bold text-yellow-900">{{ $stats['pending'] }}</div>
+                <div class="text-xs text-yellow-700">Open</div>
+            </div>
+            <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+                <div class="text-2xl font-bold text-red-900">{{ $stats['overdue'] }}</div>
+                <div class="text-xs text-red-700">Verlopen</div>
+            </div>
+            <div class="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                <div class="text-2xl font-bold text-purple-900">{{ $stats['completionRate'] }}%</div>
+                <div class="text-xs text-purple-700">Voltooiingsgraad</div>
+            </div>
+        </div>
+
+        {{-- Search and Filters --}}
+        <div class="mb-5 p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <div class="flex flex-col gap-3">
+                {{-- Search Bar --}}
+                <div>
+                    <input
+                        type="text"
+                        wire:model.live.debounce.300ms="search"
+                        placeholder="Zoek taken..."
+                        class="w-full border rounded p-2 text-sm"
+                    >
+                </div>
+
+                {{-- Filters --}}
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                    <select wire:model.live="filterStatus" class="border rounded p-2 text-sm">
+                        <option value="all">Alle statussen</option>
+                        <option value="pending">Open</option>
+                        <option value="completed">Voltooid</option>
+                    </select>
+
+                    <select wire:model.live="filterPriority" class="border rounded p-2 text-sm">
+                        <option value="all">Alle prioriteiten</option>
+                        <option value="high">Hoog</option>
+                        <option value="medium">Gemiddeld</option>
+                        <option value="low">Laag</option>
+                    </select>
+
+                    <select wire:model.live="filterDeadline" class="border rounded p-2 text-sm">
+                        <option value="all">Alle deadlines</option>
+                        <option value="today">Vandaag</option>
+                        <option value="week">Deze week</option>
+                        <option value="overdue">Verlopen</option>
+                    </select>
+                </div>
+
+                {{-- Clear Filters Button --}}
+                @if($search || $filterStatus !== 'all' || $filterPriority !== 'all' || $filterDeadline !== 'all')
+                    <button
+                        wire:click="clearFilters"
+                        class="text-sm text-blue-600 hover:text-blue-800 self-start flex items-center gap-1"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-4">
+                            <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                        </svg>
+                        Filters wissen
+                    </button>
+                @endif
+            </div>
+        </div>
+
         <div class="flex flex-col gap-3">
             @forelse($tasks as $task)
                 <div class="border-2 border-blue-900 rounded p-3 flex gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" wire:click="deleteTask('{{ $task->uuid }}')" class="size-5 text-red-500 cursor-pointer">
-                        <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
-                    </svg>
+                    <div class="flex flex-col gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" wire:click="openEditTask('{{ $task->uuid }}')" class="size-5 text-blue-600 cursor-pointer hover:text-blue-500">
+                            <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
+                            <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" wire:click="deleteTask('{{ $task->uuid }}')" class="size-5 text-red-500 cursor-pointer hover:text-red-400">
+                            <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
 
                 @if($task->is_completed)
                         <span wire:click="completeTask('{{ $task->uuid }}', false)" class="cursor-pointer p-2 rounded-full border-2 bg-green-500 border-green-500 self-start"></span>
@@ -24,8 +105,17 @@
                         <span wire:click="completeTask('{{ $task->uuid }}', true)" class="cursor-pointer p-2 rounded-full border-2 self-start"></span>
                     @endif
 
-                    <div class="flex flex-col">
-                        <span class="font-semibold">{{ $task->title }}</span>
+                    <div class="flex flex-col flex-1">
+                        <div class="flex items-start gap-2 mb-1">
+                            <span class="font-semibold">{{ $task->title }}</span>
+                            @if($task->priority === 'high')
+                                <span class="px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-800 font-medium">Hoog</span>
+                            @elseif($task->priority === 'medium')
+                                <span class="px-2 py-0.5 text-xs rounded-full bg-yellow-100 text-yellow-800 font-medium">Gemiddeld</span>
+                            @else
+                                <span class="px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-800 font-medium">Laag</span>
+                            @endif
+                        </div>
                         <p class="break-all">{{ $task->description }}</p>
 
                         @if(!empty($task->deadline))
@@ -74,9 +164,62 @@
                     <input type="datetime-local" id="task-deadline" wire:model="formCreateTask.deadline" class="border rounded p-2">
                 </div>
 
+                <div class="mb-3 flex flex-col gap-1">
+                    <label for="task-priority" class="font-semibold">Prioriteit</label>
+                    <select id="task-priority" wire:model="formCreateTask.priority" class="border rounded p-2">
+                        <option value="low">Laag</option>
+                        <option value="medium" selected>Gemiddeld</option>
+                        <option value="high">Hoog</option>
+                    </select>
+                </div>
+
                 <button class="bg-blue-900 hover:bg-blue-800 text-white px-3 py-2 rounded w-full">
                     Taak aanmaken
                 </button>
+            </form>
+        </div>
+    </div>
+
+    <div x-ref="modalEditTask" class="hidden fixed z-10 left-0 top-0 w-full h-full overflow-auto bg-black/50 justify-center items-start lg:items-center">
+        <div class="bg-white p-3 rounded md:w-1/2 z-20 mt-10 lg:mt-10">
+            <div class="flex justify-between border-b pb-3 items-center">
+                <span class="text-lg font-semibold">Taak bewerken</span>
+                <span @click="closeEditModal" class="text-2xl hover:text-black/50 cursor-pointer">&times;</span>
+            </div>
+
+            <form wire:submit="updateTask" class="mt-3">
+                <div class="mb-3 flex flex-col gap-1">
+                    <label for="edit-task-title" class="font-semibold">Titel</label>
+                    <input type="text" id="edit-task-title" wire:model="formEditTask.title" class="border rounded p-2">
+                </div>
+
+                <div class="mb-3 flex flex-col gap-1">
+                    <label for="edit-task-description" class="font-semibold">Omschrijving</label>
+                    <textarea id="edit-task-description" cols="30" rows="10" wire:model="formEditTask.description" class="border rounded p-2 resize-none"></textarea>
+                </div>
+
+                <div class="mb-3 flex flex-col gap-1">
+                    <label for="edit-task-deadline" class="font-semibold">Deadline</label>
+                    <input type="datetime-local" id="edit-task-deadline" wire:model="formEditTask.deadline" class="border rounded p-2">
+                </div>
+
+                <div class="mb-3 flex flex-col gap-1">
+                    <label for="edit-task-priority" class="font-semibold">Prioriteit</label>
+                    <select id="edit-task-priority" wire:model="formEditTask.priority" class="border rounded p-2">
+                        <option value="low">Laag</option>
+                        <option value="medium">Gemiddeld</option>
+                        <option value="high">Hoog</option>
+                    </select>
+                </div>
+
+                <div class="flex gap-2">
+                    <button type="submit" class="bg-blue-900 hover:bg-blue-800 text-white px-3 py-2 rounded flex-1">
+                        Opslaan
+                    </button>
+                    <button type="button" @click="closeEditModal" class="bg-gray-500 hover:bg-gray-400 text-white px-3 py-2 rounded flex-1">
+                        Annuleren
+                    </button>
+                </div>
             </form>
         </div>
     </div>
