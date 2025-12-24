@@ -11,6 +11,81 @@
             <h1 class="text-lg font-semibold">Mijn taken</h1>
         </div>
 
+        {{-- Statistics Dashboard --}}
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-5">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <div class="text-2xl font-bold text-blue-900">{{ $stats['total'] }}</div>
+                <div class="text-xs text-blue-700">Totaal</div>
+            </div>
+            <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                <div class="text-2xl font-bold text-green-900">{{ $stats['completed'] }}</div>
+                <div class="text-xs text-green-700">Voltooid</div>
+            </div>
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                <div class="text-2xl font-bold text-yellow-900">{{ $stats['pending'] }}</div>
+                <div class="text-xs text-yellow-700">Open</div>
+            </div>
+            <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+                <div class="text-2xl font-bold text-red-900">{{ $stats['overdue'] }}</div>
+                <div class="text-xs text-red-700">Verlopen</div>
+            </div>
+            <div class="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                <div class="text-2xl font-bold text-purple-900">{{ $stats['completionRate'] }}%</div>
+                <div class="text-xs text-purple-700">Voltooiingsgraad</div>
+            </div>
+        </div>
+
+        {{-- Search and Filters --}}
+        <div class="mb-5 p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <div class="flex flex-col gap-3">
+                {{-- Search Bar --}}
+                <div>
+                    <input
+                        type="text"
+                        wire:model.live.debounce.300ms="search"
+                        placeholder="Zoek taken..."
+                        class="w-full border rounded p-2 text-sm"
+                    >
+                </div>
+
+                {{-- Filters --}}
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                    <select wire:model.live="filterStatus" class="border rounded p-2 text-sm">
+                        <option value="all">Alle statussen</option>
+                        <option value="pending">Open</option>
+                        <option value="completed">Voltooid</option>
+                    </select>
+
+                    <select wire:model.live="filterPriority" class="border rounded p-2 text-sm">
+                        <option value="all">Alle prioriteiten</option>
+                        <option value="high">Hoog</option>
+                        <option value="medium">Gemiddeld</option>
+                        <option value="low">Laag</option>
+                    </select>
+
+                    <select wire:model.live="filterDeadline" class="border rounded p-2 text-sm">
+                        <option value="all">Alle deadlines</option>
+                        <option value="today">Vandaag</option>
+                        <option value="week">Deze week</option>
+                        <option value="overdue">Verlopen</option>
+                    </select>
+                </div>
+
+                {{-- Clear Filters Button --}}
+                @if($search || $filterStatus !== 'all' || $filterPriority !== 'all' || $filterDeadline !== 'all')
+                    <button
+                        wire:click="clearFilters"
+                        class="text-sm text-blue-600 hover:text-blue-800 self-start flex items-center gap-1"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-4">
+                            <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                        </svg>
+                        Filters wissen
+                    </button>
+                @endif
+            </div>
+        </div>
+
         <div class="flex flex-col gap-3">
             @forelse($tasks as $task)
                 <div class="border-2 border-blue-900 rounded p-3 flex gap-3">
